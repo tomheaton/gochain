@@ -25,4 +25,5 @@ type Blockchain struct {
 
 func main() {
 	fmt.Println("Generating the GoChain")
+	// TODO: generate the blockchain.
 }
