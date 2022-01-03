@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 	//"crypto/sha256"
 	//"encoding/json"
@@ -17,7 +18,7 @@ type Block struct {
 	hash         string
 	previousHash string
 	timestamp    time.Time
-	pow          int
+	pow          int // Proof of Work
 }
 
 type Blockchain struct {
@@ -43,6 +44,13 @@ func generateBlockchain(difficulty int) Blockchain {
 		genesisBlock: genesisBlock,
 		chain:        []Block{genesisBlock},
 		difficulty:   difficulty,
+	}
+}
+
+func (block *Block) mine(difficulty int) {
+	for !strings.HasPrefix(block.hash, strings.Repeat("0", difficulty)) {
+		block.pow++
+		block.hash = block.calculateHash()
 	}
 }
 
