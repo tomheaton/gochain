@@ -54,6 +54,22 @@ func (block *Block) mine(difficulty int) {
 	}
 }
 
+func (blockchain Blockchain) addBlock(from string, to string, amount float64) {
+	blockData := map[string]interface{}{
+		"from":   from,
+		"to":     to,
+		"amount": amount,
+	}
+	lastBlock := blockchain.chain[len(blockchain.chain)-1]
+	newBlock := Block{
+		data:         blockData,
+		previousHash: lastBlock.hash,
+		timestamp:    time.Now(),
+	}
+	newBlock.mine(blockchain.difficulty)
+	blockchain.chain = append(blockchain.chain, newBlock)
+}
+
 func main() {
 	fmt.Println("Generating the GoChain")
 	// TODO: generate the blockchain.
