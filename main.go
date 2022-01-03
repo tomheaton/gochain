@@ -70,8 +70,18 @@ func (blockchain Blockchain) addBlock(from string, to string, amount float64) {
 	blockchain.chain = append(blockchain.chain, newBlock)
 }
 
+func (blockchain Blockchain) isValid() bool {
+	for i := range blockchain.chain[1:] {
+		previousBlock := blockchain.chain[i]
+		currentBlock := blockchain.chain[i+1]
+		if currentBlock.hash != currentBlock.calculateHash() || currentBlock.previousHash != previousBlock.hash {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
 	fmt.Println("Generating the GoChain")
-	// TODO: generate the blockchain.
 	generateBlockchain(1)
 }
