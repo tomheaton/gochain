@@ -83,5 +83,15 @@ func (blockchain Blockchain) isValid() bool {
 
 func main() {
 	fmt.Println("Generating the GoChain")
-	generateBlockchain(1)
+	blockchain := generateBlockchain(1)
+
+	// Interact with blockchain.
+	blockchain.addBlock("A", "B", 7)
+	blockchain.addBlock("B", "C", 9)
+
+	if blockchain.isValid() {
+		fmt.Println("The GoChain is valid.")
+	} else {
+		fmt.Println("The GoChain is not valid.")
+	}
 }
