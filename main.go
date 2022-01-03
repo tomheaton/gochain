@@ -7,10 +7,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	//"crypto/sha256"
-	//"encoding/json"
-	//"strconv"
-	//"strings"
 )
 
 type Block struct {
@@ -89,10 +85,10 @@ func (blockchain Blockchain) viewBlockchain() {
 }
 
 func main() {
-	fmt.Println("Generating the GoChain")
+	fmt.Println("Generating the blockchain...")
 	blockchain := generateBlockchain(1)
 
-	// Interact with blockchain.
+	// Interact with the blockchain.
 	blockchain.addBlock("A", "B", 7)
 	blockchain.addBlock("B", "C", 9)
 
@@ -102,5 +98,6 @@ func main() {
 		fmt.Println("The GoChain is not valid.")
 	}
 
+	// View the blockchain.
 	blockchain.viewBlockchain()
 }
