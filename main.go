@@ -54,7 +54,7 @@ func (block *Block) mine(difficulty int) {
 	}
 }
 
-func (blockchain Blockchain) addBlock(from string, to string, amount float64) {
+func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
 	blockData := map[string]interface{}{
 		"from":   from,
 		"to":     to,
@@ -81,6 +81,13 @@ func (blockchain Blockchain) isValid() bool {
 	return true
 }
 
+func (blockchain Blockchain) viewBlockchain() {
+	fmt.Println("Blockchain Information:")
+	fmt.Printf("\tLength: %x\n", len(blockchain.chain))
+	// TODO: pretty print this.
+	fmt.Printf("\tChain: %v\n", blockchain.chain)
+}
+
 func main() {
 	fmt.Println("Generating the GoChain")
 	blockchain := generateBlockchain(1)
@@ -94,4 +101,6 @@ func main() {
 	} else {
 		fmt.Println("The GoChain is not valid.")
 	}
+
+	blockchain.viewBlockchain()
 }
