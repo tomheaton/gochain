@@ -80,13 +80,17 @@ func (blockchain Blockchain) isValid() bool {
 func (blockchain Blockchain) viewBlockchain() {
 	fmt.Println("Blockchain Information:")
 	fmt.Printf("\tLength: %x\n", len(blockchain.chain))
-	// TODO: pretty print this.
-	fmt.Printf("\tChain: %v\n", blockchain.chain)
+	for i, block := range blockchain.chain {
+		fmt.Printf("\tBlock %d\n", i)
+		fmt.Printf("\t\tData: %v\n", block.data)
+		fmt.Printf("\t\tHash: %v\n", block.hash)
+		fmt.Printf("\t\tPrevious Hash: %v\n", block.previousHash)
+		fmt.Printf("\t\tTimestamp: %v\n", block.timestamp)
+		fmt.Printf("\t\tProof of Work: %v\n", block.proofOfWork)
+	}
 }
 
 func main() {
-	// TODO: transition to "GoChain".
-
 	fmt.Println("Generating the blockchain...")
 	blockchain := generateBlockchain(1)
 
