@@ -14,7 +14,7 @@ type Block struct {
 	hash         string
 	previousHash string
 	timestamp    time.Time
-	pow          int // Proof of Work
+	proofOfWork  int
 }
 
 type Blockchain struct {
@@ -25,7 +25,7 @@ type Blockchain struct {
 
 func (block Block) calculateHash() string {
 	data, _ := json.Marshal(block.data)
-	blockData := block.previousHash + string(data) + block.timestamp.String() + strconv.Itoa(block.pow)
+	blockData := block.previousHash + string(data) + block.timestamp.String() + strconv.Itoa(block.proofOfWork)
 	blockHash := sha256.Sum256([]byte(blockData))
 	return fmt.Sprintf("%x", blockHash)
 }
@@ -45,7 +45,7 @@ func generateBlockchain(difficulty int) Blockchain {
 
 func (block *Block) mine(difficulty int) {
 	for !strings.HasPrefix(block.hash, strings.Repeat("0", difficulty)) {
-		block.pow++
+		block.proofOfWork++
 		block.hash = block.calculateHash()
 	}
 }
