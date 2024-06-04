@@ -23,13 +23,6 @@ type Blockchain struct {
 	difficulty   int
 }
 
-func (block Block) calculateHash() string {
-	data, _ := json.Marshal(block.data)
-	blockData := block.previousHash + string(data) + block.timestamp.String() + strconv.Itoa(block.proofOfWork)
-	blockHash := sha256.Sum256([]byte(blockData))
-	return fmt.Sprintf("%x", blockHash)
-}
-
 func generateBlockchain(difficulty int) Blockchain {
 	genesisBlock := Block{
 		hash:      "0",
@@ -41,6 +34,13 @@ func generateBlockchain(difficulty int) Blockchain {
 		chain:        []Block{genesisBlock},
 		difficulty:   difficulty,
 	}
+}
+
+func (block *Block) calculateHash() string {
+	data, _ := json.Marshal(block.data)
+	blockData := block.previousHash + string(data) + block.timestamp.String() + strconv.Itoa(block.proofOfWork)
+	blockHash := sha256.Sum256([]byte(blockData))
+	return fmt.Sprintf("%x", blockHash)
 }
 
 func (block *Block) mine(difficulty int) {
@@ -66,7 +66,7 @@ func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
 	blockchain.chain = append(blockchain.chain, newBlock)
 }
 
-func (blockchain Blockchain) isValid() bool {
+func (blockchain *Blockchain) isValid() bool {
 	for i := range blockchain.chain[1:] {
 		previousBlock := blockchain.chain[i]
 		currentBlock := blockchain.chain[i+1]
@@ -77,7 +77,7 @@ func (blockchain Blockchain) isValid() bool {
 	return true
 }
 
-func (blockchain Blockchain) viewBlockchain() {
+func (blockchain *Blockchain) viewBlockchain() {
 	fmt.Println("Blockchain Information:")
 	fmt.Printf("\tLength: %x\n", len(blockchain.chain))
 	for i, block := range blockchain.chain {
