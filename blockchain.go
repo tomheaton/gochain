@@ -26,7 +26,7 @@ type Blockchain struct {
 func generateBlockchain(difficulty int) Blockchain {
 	genesisBlock := Block{
 		hash:      "0",
-		timestamp: time.Now(),
+		timestamp: time.Now().UTC(),
 	}
 
 	return Blockchain{
