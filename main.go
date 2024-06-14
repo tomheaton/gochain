@@ -9,11 +9,6 @@ func main() {
 	blockchain.addBlock("A", "B", 7)
 	blockchain.addBlock("B", "C", 9)
 
-	if blockchain.isValid() {
-		fmt.Println("The blockchain is valid.")
-	} else {
-		fmt.Println("The blockchain is not valid.")
-	}
-
 	blockchain.viewBlockchain()
+	fmt.Printf("Blockchain valid: %v\n", blockchain.isValid())
 }
