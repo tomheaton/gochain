@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -50,6 +51,37 @@ func (block *Block) mine(difficulty int) {
 	}
 }
 
+func (block *Block) mineConcurrent(difficulty int) {
+	target := strings.Repeat("0", difficulty)
+	resultChannel := make(chan Block)
+	var wg sync.WaitGroup
+
+	worker := func(startNonce int) {
+		defer wg.Done()
+		localBlock := *block
+		localBlock.ProofOfWork = startNonce
+		for !strings.HasPrefix(localBlock.Hash, target) {
+			localBlock.ProofOfWork++
+			localBlock.Hash = localBlock.calculateHash()
+		}
+		resultChannel <- localBlock
+	}
+
+	numberOfWorkers := 4
+	wg.Add(numberOfWorkers)
+	for i := 0; i < numberOfWorkers; i++ {
+		// Each worker starts with a different nonce
+		go worker(i * 1_000_000)
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChannel)
+	}()
+
+	*block = <-resultChannel
+}
+
 func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
 	blockData := map[string]interface{}{
 		"from":   from,
@@ -63,6 +95,7 @@ func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
 		Timestamp:    time.Now(),
 	}
 	newBlock.mine(blockchain.Difficulty)
+	//newBlock.mineConcurrent(blockchain.Difficulty)
 	blockchain.Chain = append(blockchain.Chain, newBlock)
 }
 
