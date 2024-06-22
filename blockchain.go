@@ -4,10 +4,16 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+)
+
+const (
+	// NumberOfWorkers Number of concurrent workers for mining
+	NumberOfWorkers = 4
 )
 
 type Block struct {
@@ -38,7 +44,10 @@ func generateBlockchain(difficulty int) Blockchain {
 }
 
 func (block *Block) calculateHash() string {
-	data, _ := json.Marshal(block.Data)
+	data, err := json.Marshal(block.Data)
+	if err != nil {
+		log.Fatalf("Error marshaling block data: %v", err)
+	}
 	blockData := block.PreviousHash + string(data) + block.Timestamp.String() + strconv.Itoa(block.ProofOfWork)
 	blockHash := sha256.Sum256([]byte(blockData))
 	return fmt.Sprintf("%x", blockHash)
@@ -67,9 +76,8 @@ func (block *Block) mineConcurrent(difficulty int) {
 		resultChannel <- localBlock
 	}
 
-	numberOfWorkers := 4
-	wg.Add(numberOfWorkers)
-	for i := 0; i < numberOfWorkers; i++ {
+	wg.Add(NumberOfWorkers)
+	for i := 0; i < NumberOfWorkers; i++ {
 		// Each worker starts with a different nonce
 		go worker(i * 1_000_000)
 	}
@@ -118,7 +126,7 @@ func (blockchain *Blockchain) viewBlockchain() {
 		fmt.Printf("\t\tData: %v\n", block.Data)
 		fmt.Printf("\t\tHash: %v\n", block.Hash)
 		fmt.Printf("\t\tPrevious Hash: %v\n", block.PreviousHash)
-		fmt.Printf("\t\tTimestamp: %v\n", block.Timestamp)
+		fmt.Printf("\t\tTimestamp: %v\n", block.Timestamp.Format(time.RFC3339))
 		fmt.Printf("\t\tProof of Work: %v\n", block.ProofOfWork)
 	}
 }
