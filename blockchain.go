@@ -16,20 +16,23 @@ const (
 	NumberOfWorkers = 4
 )
 
+// Block represents a block in the blockchain
 type Block struct {
 	Data         map[string]interface{} `json:"data"`
 	Hash         string                 `json:"hash"`
 	PreviousHash string                 `json:"previous_hash"`
-	Timestamp    time.Time              `json:"timestamp"`
 	ProofOfWork  int                    `json:"proof_of_work"`
+	Timestamp    time.Time              `json:"timestamp"`
 }
 
+// Blockchain represents a blockchain
 type Blockchain struct {
 	GenesisBlock Block   `json:"genesis_block"`
 	Chain        []Block `json:"chain"`
 	Difficulty   int     `json:"difficulty"`
 }
 
+// generateBlockchain generates a new blockchain
 func generateBlockchain(difficulty int) Blockchain {
 	genesisBlock := Block{
 		Hash:      "0",
@@ -43,6 +46,7 @@ func generateBlockchain(difficulty int) Blockchain {
 	}
 }
 
+// calculateHash calculates the hash of a block
 func (block *Block) calculateHash() string {
 	data, err := json.Marshal(block.Data)
 	if err != nil {
@@ -53,6 +57,7 @@ func (block *Block) calculateHash() string {
 	return fmt.Sprintf("%x", blockHash)
 }
 
+// mine mines a block
 func (block *Block) mine(difficulty int) {
 	for !strings.HasPrefix(block.Hash, strings.Repeat("0", difficulty)) {
 		block.ProofOfWork++
@@ -60,6 +65,7 @@ func (block *Block) mine(difficulty int) {
 	}
 }
 
+// mineConcurrent mines a block concurrently using a number of workers
 func (block *Block) mineConcurrent(difficulty int) {
 	target := strings.Repeat("0", difficulty)
 	resultChannel := make(chan Block)
@@ -90,6 +96,7 @@ func (block *Block) mineConcurrent(difficulty int) {
 	*block = <-resultChannel
 }
 
+// addBlock adds a new block to the blockchain
 func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
 	blockData := map[string]interface{}{
 		"from":   from,
@@ -107,6 +114,7 @@ func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
 	blockchain.Chain = append(blockchain.Chain, newBlock)
 }
 
+// isValid checks if the blockchain is valid
 func (blockchain *Blockchain) isValid() bool {
 	for i := range blockchain.Chain[1:] {
 		previousBlock := blockchain.Chain[i]
@@ -118,6 +126,7 @@ func (blockchain *Blockchain) isValid() bool {
 	return true
 }
 
+// viewBlockchain prints the blockchain information
 func (blockchain *Blockchain) viewBlockchain() {
 	fmt.Println("Blockchain Information:")
 	fmt.Printf("\tLength: %x\n", len(blockchain.Chain))
