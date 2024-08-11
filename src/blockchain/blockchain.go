@@ -1,4 +1,4 @@
-package main
+package blockchain
 
 import (
 	"crypto/sha256"
@@ -32,8 +32,8 @@ type Blockchain struct {
 	Difficulty   int     `json:"difficulty"`
 }
 
-// generateBlockchain generates a new blockchain
-func generateBlockchain(difficulty int) Blockchain {
+// GenerateBlockchain generates a new blockchain
+func GenerateBlockchain(difficulty int) Blockchain {
 	genesisBlock := Block{
 		Hash:      "0",
 		Timestamp: time.Now().UTC(),
@@ -96,8 +96,8 @@ func (block *Block) mineConcurrent(difficulty int) {
 	*block = <-resultChannel
 }
 
-// addBlock adds a new block to the blockchain
-func (blockchain *Blockchain) addBlock(from string, to string, amount float64) {
+// AddBlock adds a new block to the blockchain
+func (blockchain *Blockchain) AddBlock(from string, to string, amount float64) {
 	blockData := map[string]interface{}{
 		"from":   from,
 		"to":     to,
@@ -126,8 +126,8 @@ func (blockchain *Blockchain) isValid() bool {
 	return true
 }
 
-// viewBlockchain prints the blockchain information
-func (blockchain *Blockchain) viewBlockchain() {
+// ViewBlockchain prints the blockchain information
+func (blockchain *Blockchain) ViewBlockchain() {
 	fmt.Println("Blockchain Information:")
 	fmt.Printf("\tLength: %x\n", len(blockchain.Chain))
 	for i, block := range blockchain.Chain {
@@ -138,4 +138,5 @@ func (blockchain *Blockchain) viewBlockchain() {
 		fmt.Printf("\t\tTimestamp: %v\n", block.Timestamp.Format(time.RFC3339))
 		fmt.Printf("\t\tProof of Work: %v\n", block.ProofOfWork)
 	}
+	fmt.Printf("Blockchain valid: %v\n", blockchain.isValid())
 }

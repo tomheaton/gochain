@@ -1,17 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"gochain/src/blockchain"
+)
 
 func main() {
 	fmt.Println("Generating the blockchain...")
-	blockchain := generateBlockchain(1)
 
-	blockchain.addBlock("A", "B", 7)
-	blockchain.addBlock("B", "C", 9)
-	blockchain.addBlock("C", "D", 3)
-	blockchain.addBlock("D", "E", 5)
-	blockchain.addBlock("E", "F", 2)
+	bc := blockchain.GenerateBlockchain(1)
 
-	blockchain.viewBlockchain()
-	fmt.Printf("Blockchain valid: %v\n", blockchain.isValid())
+	bc.AddBlock("A", "B", 7)
+	bc.AddBlock("B", "C", 9)
+	bc.AddBlock("C", "D", 3)
+	bc.AddBlock("D", "E", 5)
+	bc.AddBlock("E", "F", 2)
+
+	bc.ViewBlockchain()
 }
