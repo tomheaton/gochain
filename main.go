@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gochain/src/blockchain"
+	"gochain/pkg/blockchain"
 )
 
 func main() {
